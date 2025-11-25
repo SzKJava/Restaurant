@@ -5,8 +5,9 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MenuItem;
+use App\Http\Resources\FoodResource;
 
-class FoodController extends Controller {
+class FoodController extends ResponseController {
 
     public function getFoods() {
 
@@ -14,17 +15,22 @@ class FoodController extends Controller {
 
         $foods = MenuItem::with( "category" )->get();
 
-        return response()->json([ "foods" => $foods ]);
+        return $this->sendResponse( FoodResource::collection( $foods ), "" );
     }
 
-    public function getFood() {
+    public function getFood( Request $request ) {
 
-        $food = MenuItem::where( "name", "Tiramisu" )->first();
+        $food = MenuItem::where( "name", $request[ "food" ] )->first();
 
-        return response()->json([ "food" => $food ]);
+        return $this->sendResponse( new FoodResource( $food ), "" );
     }
 
     public function addFood( Request $request ) {
+
+        $request->validate([
+
+            "name" => [ "required", "string", "max:20", "unique:menuitems" ],
+        ]); 
 
         // $food = MenuItem::create([
         //     "name" => $request[ "name" ],
@@ -35,10 +41,10 @@ class FoodController extends Controller {
         $food = new MenuItem();
 
         $food->name = $request[ "name" ];
-        $food->category_id = $request[ "category_id" ];
+        $food->category_id = ( new CategoryController )->getId( $request[ "category" ]);
         $food->price = $request[ "price" ];
 
-        $food->save();
+        //$food->save();
 
         return response()->json([ "success" => $food ]);
     }
@@ -54,7 +60,7 @@ class FoodController extends Controller {
         } else {
 
             $food->name = $request[ "name" ];
-            $food->category_id = $request[ "category_id" ];
+            $food->category_id = ( new CategoryController )->getId( $request[ "category" ]);
             $food->price = $request[ "price" ];
 
             $food->update();
@@ -68,13 +74,13 @@ class FoodController extends Controller {
         $food = MenuItem::find( $id );
         if( is_null( $food )) {
 
-            return response()->json([ "success" => false, "message" => "Nincs ilyen étel" ]);
+            return $this->sendError( "Adathiba", ["Nincs ilyen étel"], 406 );
 
         }else {
 
             $food->delete();
 
-            return response()->json([ "success" => true, "message" => "Sikeres törlés"]);
+            return $this->sendResponse( $food, "Sikeres törlés" );
         }
     }
 }
