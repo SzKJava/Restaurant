@@ -15,16 +15,30 @@ class CategoryController extends ResponseController {
         return $this->sendResponse( $categories, "" );
     }
 
-    public function addCategory() {
+    public function addCategory( Request $request ) {
 
+        $category = new Category();
+        $category->name = $request[ "name" ];
+
+        $category->save();
+
+        return $this->sendResponse( $category, "Sikeres kiírás" );
     }
 
-    public function updateCategory() {
+    public function updateCategory( Request $request, $id ) {
 
+        $category = Category->find( $id );
+        $category->name = $request[ "name" ];
+
+        return $this->sendResponse( $category, "Sikeres módosítás" );
     }
 
-    public function destroyCategory() {
+    public function destroyCategory( $id ) {
 
+        $category = Category->find( $id );
+        $category->delete();
+
+        return $this->sendResponse( $category, "Sikeres törlés" );
     }
 
     public function getId( $name ) {
