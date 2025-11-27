@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\MenuItem;
 use App\Http\Resources\FoodResource;
+use App\Http\Requests\FoodRequest;
 
 class FoodController extends ResponseController {
 
@@ -25,12 +26,13 @@ class FoodController extends ResponseController {
         return $this->sendResponse( new FoodResource( $food ), "" );
     }
 
-    public function addFood( Request $request ) {
+    public function addFood( FoodRequest $request ) {
 
-        $request->validate([
+        //$request->validated();
+        // $request->validate([
 
-            "name" => [ "required", "string", "max:20", "unique:menuitems" ],
-        ]); 
+        //     "name" => [ "required", "string", "max:20", "unique:menuitems" ],
+        // ]); 
 
         // $food = MenuItem::create([
         //     "name" => $request[ "name" ],
@@ -82,5 +84,21 @@ class FoodController extends ResponseController {
 
             return $this->sendResponse( $food, "Sikeres törlés" );
         }
+    }
+
+        public function getId( $name ) {
+// hibaüzenet!!!
+        $food = MenuItem::where( "name", $name )->first();
+
+        $id = $food->id;
+
+        return $id;
+    }
+
+    public function getPrice( $id ) {
+
+        $food = MenuItem::find( $id );
+
+        return $food->price;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Http\Requests\CategoryRequest;
 
 class CategoryController extends ResponseController {
     
@@ -15,12 +16,13 @@ class CategoryController extends ResponseController {
         return $this->sendResponse( $categories, "" );
     }
 
-    public function addCategory( Request $request ) {
+    public function addCategory( CategoryRequest $request ) {
 
+        //$request->validated();
         $category = new Category();
         $category->name = $request[ "name" ];
 
-        $category->save();
+        //$category->save();
 
         return $this->sendResponse( $category, "Sikeres kiírás" );
     }

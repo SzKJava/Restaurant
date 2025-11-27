@@ -64,12 +64,28 @@ class MenuItemController extends Controller {
         DB::table( "menuitems" )->where( "name", "Mákos tészta" )->update( $data );
 
         return "Sikeres módosítás";
-     }
+    }
 
-     public function destroyFood() {
+    public function destroyFood() {
 
         $food = DB::table( "menuitems" )->where( "id", 21 )->delete();
 
         return "Sikeres törlés";
-     }
+    }
+
+    public function getId( $name ) {
+// hibaüzenet!!!
+        $food = MenuItem::where( "name", $name )->first();
+
+        $id = $food->id;
+
+        return $id;
+    }
+
+    public function getPrice( $id ) {
+
+        $food = MenuItem::find( $id );
+
+        return $food->price;
+    }
 }

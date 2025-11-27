@@ -9,13 +9,13 @@ class MenuItem extends Model {
     protected $table = "menuitems";
     public $timestamps = false;
 
-    // protected $fillable = [
-
-    //     "name", "category_id", "price"
-    // ];
-
     public function category() {
 
         return $this->belongsTo( Category::class );
+    }
+
+    public function sale() {
+
+        return $this->hasMany( Sale::class );
     }
 }

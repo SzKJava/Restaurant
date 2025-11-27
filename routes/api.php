@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\FoodController;
 use App\Http\Controllers\api\CategoryController;
+use App\Http\Controllers\api\OrderController;
+use App\Http\Controllers\api\SaleController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -20,3 +22,8 @@ Route::get( "/testfood", [ MenuItemController::class, "food" ]);
 
 // Category
 Route::get( "/categories", [ CategoryController::class, "getCategories" ]);
+Route::post( "/addcategory", [ CategoryController::class, "addCategory" ]);
+
+// Sale
+Route::get( "/sales", [ SaleController::class, "getSales" ]);
+Route::post( "/addsale", [ SaleController::class, "addSale" ]);
