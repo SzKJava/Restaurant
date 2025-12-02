@@ -20,8 +20,9 @@ class DatabaseSeeder extends Seeder
 
             CategorySeeder::class,
             MenuitemSeeder::class,
-            UserSeeder::class,
-            SaleSeeder::class
+            //UserSeeder::class,
+            SaleSeeder::class,
+            AdminSeeder::class
         ]);
 
     }
