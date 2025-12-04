@@ -3,10 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class SaleRequest extends FormRequest
+class SaleRequest extends BaseRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,13 +19,17 @@ class SaleRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-        return [
-            "name" => [ "required", "string" ],
+    public function rules(): array {
+
+        $baseRules = $this->getBaseRules();
+
+        $specificRules = [
+            
             "date" => [ "required", "date", "after_or_equal:today" ],
             "quantity" => [ "required", "numeric" ]
         ];
+
+        return array_merge( $baseRules, $specificRules );
     }
 
     public function messages() {
@@ -41,15 +43,5 @@ class SaleRequest extends FormRequest
             "quantity.required" => "Mennyiség mező nem lehet üres.",
             "quantity.numeric" => "Mennyiség csak szám lehet."
         ];
-    }
-
-    public function failedValidation( Validator $validator ) {
-
-        throw new HttpResponseException( response()->json([
-
-            "success" => false,
-            "message" => "Validációs hiba",
-            "error" =>$validator->errors()
-        ]));
     }
 }

@@ -7,9 +7,12 @@ use Illuminate\Http\Request;
 use App\Models\Sale;
 use App\Http\Resources\SaleResource;
 use App\Http\Requests\SaleRequest;
+use App\Traits\ResponseTrait;
 
-class SaleController extends ResponseController {
+class SaleController extends Controller {
     
+    use ResponseTrait;
+
     public function getSales() {
 
         $sales = Sale::with( "menuitem.category" )->get();

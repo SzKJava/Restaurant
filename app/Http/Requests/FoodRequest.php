@@ -3,11 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class FoodRequest extends FormRequest
-{
+class FoodRequest extends BaseRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -23,12 +20,16 @@ class FoodRequest extends FormRequest
      */
     public function rules(): array {
 
-        return [
+        $baseRules = $this->getBaseRules();
+
+        $specificRules = [
             
-            "name" => [ "required", "string", "max:50", "unique:menuitems" ],
+            "name" => "unique:menuitems",
             "category" => [ "required", "string", "max:20" ],
             "price" => [ "required", "numeric" ]
         ];
+
+        return array_merge( $baseRules, $specificRules );
     }
 
     public function messages() {
@@ -44,15 +45,5 @@ class FoodRequest extends FormRequest
             "price.required" => "Ár mező nem lehet üres.",
             "price.numeric" => "Ár mező csak szám lehet."
         ];
-    }
-
-    public function failedValidation( Validator $validator ) {
-
-        throw new HttpResponseException( response()->json([
-
-            "success" => false,
-            "message" => "Validációs hiba",
-            "error" =>$validator->errors()
-        ]));
     }
 }

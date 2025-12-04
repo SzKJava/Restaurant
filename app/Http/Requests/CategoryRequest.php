@@ -3,10 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CategoryRequest extends FormRequest {
+class CategoryRequest extends BaseRequest {
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -22,10 +20,7 @@ class CategoryRequest extends FormRequest {
      */
     public function rules(): array {
 
-        return [
-            
-            "name" => [ "required", "string", "max:20" ]
-        ];
+        return $this->getBaseRules();
     }
 
     public function messages() {
@@ -35,15 +30,5 @@ class CategoryRequest extends FormRequest {
             "name.string" => "Kategoria mező csak szöveg lehet.",
             "name.max" => "Kategoria mező túl hosszú."
         ];
-    }
-
-    public function failedValidation( Validator $validator ) {
-
-        throw new HttpResponseException( response()->json([
-
-            "success" => false,
-            "message" => "Validációs hiba",
-            "error" =>$validator->errors()
-        ]));
     }
 }

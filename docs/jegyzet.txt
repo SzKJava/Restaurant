@@ -1,0 +1,2 @@
+Közös szabályok:
+required, min, max,
