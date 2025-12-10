@@ -24,20 +24,29 @@ class AuthRequest extends BaseRequest
 
         $baseRules = $this->getBaseRules();
 
-        $specificRules = [
-            //"name" => "unique:users",
-            "email" => [ "required",
-                         "email",
-                         "unique:users" ],
-            "password" => [ "required", "confirmed",
+        $specificRules = [ "name" => "unique:users",
+                           "email" => [ "required", "email", "unique:users" ],
+                           "password" => [ "required", "confirmed",
                             Password::min( 6 )
                             -> mixedCase()
                             -> numbers()
                             ->symbols()
                             //->uncompromised()
-                            ]
-        ];
+                            ]];
 
-        return array_merge( $baseRules, $specificRules );
+        foreach( $specificRules as $field => $rules ) {
+
+            $specific = is_string( $rules ) ? explode( "|", $rules ) : $rules;
+            if( array_key_exists( $field, $baseRules )) {
+
+                $mergedRules[ $field ] = array_merge( $baseRules[ $field ], $specific ); 
+            
+            }else {
+
+                $mergedRules[ $field ] = $specific;
+            }
+        }
+
+        return $mergedRules;
     }
 }

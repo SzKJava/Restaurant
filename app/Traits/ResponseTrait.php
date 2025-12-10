@@ -8,7 +8,7 @@ trait ResponseTrait {
     
     protected function sendResponse( $data, $message = "", $code = 200 ): JsonResponse {
 
-        // siker, adat, üzetet, kód
+        // siker, adat, üzenet, kód
         $response = [
             "success" => true,
             "data" => $data,

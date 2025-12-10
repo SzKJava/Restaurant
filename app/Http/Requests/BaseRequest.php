@@ -7,6 +7,7 @@ use App\Traits\ResponseTrait;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
+
  abstract class BaseRequest extends FormRequest {
 
     use ResponseTrait;
@@ -22,7 +23,8 @@ use Illuminate\Http\Exceptions\HttpResponseException;
 
         return [
 
-            "name" => [ "required", "string", "min:3", "max:20" ]
+            "name" => [ "required", "string", "min:3", "max:20" ],
+            
         ];
     }
 }
