@@ -18,7 +18,7 @@ class AdminSeeder extends Seeder
             "name" => "admin",
             "email" => "barmi@vmi.lan",
             "password" => bcrypt( "admin" ),
-            "role" => 2,
+            "role" => "admin",
             "banningtime" => null
         ]);
     }

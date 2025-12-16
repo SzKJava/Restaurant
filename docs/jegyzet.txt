@@ -1,2 +1,20 @@
 Közös szabályok:
 required, min, max,
+
+Login:
+    - validálás
+    - azonosítás
+        - sikeres
+            - tiltásban van -e => üzenet
+            - token generálás
+            - számláló nullázás
+            - idő törlése
+            - token visszaküldés
+
+        - sikertelen
+            - számlálni kell a próbálkozásokat
+                - 3 után szankció
+                    - tiltásba helyezés => 1 perc
+                    - email küldés
+            
+    

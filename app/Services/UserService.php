@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Models\User;
 use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserService {
     
@@ -20,7 +22,7 @@ class UserService {
         $user->email = $data[ "email" ];
         $user->password = bcrypt( $data[ "password" ]);
         //$user->password = Hash::make( $data[ "password" ]);
-        $user->role = 0;
+        $user->role = "user";
         $user->banningtime = null;
 
         $user->save();
@@ -28,7 +30,27 @@ class UserService {
         return $this->sendResponse( $user->name, "Sikeres regisztráció" );
     }
 
-    public function userLogin() {
+    public function userLogin( User $user ) {
 
+        $token = $user->createToken( $user->name . "Token" )->plainTextToken;
+        $response = [
+            "token" => $token,
+            "user" => $user->name
+        ];
+
+        return $this->sendResponse( $response, "Sikeres bejelentkezés." );
+    }
+
+    public function failedLogin( $name ) {
+
+        $user = User::where( "name", $name )->first();
+
+        if( !is_null( $user )) {
+
+            $user->increment( "logincounter" );
+            $user->update();
+            
+            return $this->sendResponse( $user );
+        }
     }
 }

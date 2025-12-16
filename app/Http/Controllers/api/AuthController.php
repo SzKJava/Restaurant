@@ -25,9 +25,17 @@ class AuthController extends Controller {
         return $this->userService->userRegister( $validated );
     }
 
-    public function login() {
+    public function login( Request $request ) {
 
+        if( Auth::attempt([ "name" => $request[ "name"], "password" => $request[ "password" ]])) {
 
+            $user = Auth::user();
+            return $this->userService->userLogin( $user );
+
+        }else {
+
+            return $this->userService->failedLogin( $request[ "name" ]);
+        }
     }
 
     public function logout() {

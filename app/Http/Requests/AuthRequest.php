@@ -23,6 +23,8 @@ class AuthRequest extends BaseRequest
     public function rules(): array {
 
         $baseRules = $this->getBaseRules();
+// confirmed => password_confirmation
+// same:password => confirm_password
 
         $specificRules = [ "name" => "unique:users",
                            "email" => [ "required", "email", "unique:users" ],
