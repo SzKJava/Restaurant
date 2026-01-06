@@ -36,3 +36,4 @@ Route::get( "/users", [ AdminController::class, "getUsers" ]);
 // User
 Route::post( "/register", [ AuthController::class, "register" ]);
 Route::post( "/login", [ AuthController::class, "login" ]);
+Route::post( "/logout", [ AuthController::class, "logout" ]);

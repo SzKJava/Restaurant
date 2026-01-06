@@ -53,4 +53,16 @@ class UserService {
             return $this->sendResponse( $user );
         }
     }
+
+    public function userLogout( User $user ) {
+
+        $success = $user->currentAccessToken()->delete();
+
+        if( !$success ) {
+
+            return $this->sendError( "Végrehajtási hiba", [ "Hiba a kijelentkezés során" ], 422 );
+        }
+
+        return $this->sendResponse( $user->name, "Sikeres kijelentkezés" );
+    }
 }

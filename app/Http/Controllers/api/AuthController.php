@@ -40,6 +40,8 @@ class AuthController extends Controller {
 
     public function logout() {
 
-
+        $user = auth( "sanctum" )->user();
+        
+        return $this->userService->userLogout( $user );
     }
 }
