@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             
-            $table->string( "role" )->after( "password" )->default( "user" );
+            $table->enum( "role", [ "super", "admin", "user" ] )->after( "password" )->default( "user" );
             $table->timestamp( "banningtime" )->after( "role" )->nullable();
             $table->integer( "logincounter" )->after( "banningtime" )->default( 0 );
         });

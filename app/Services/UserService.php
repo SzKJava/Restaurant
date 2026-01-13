@@ -7,12 +7,19 @@ use App\Traits\ResponseTrait;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+//use App\Services\TokenService;
+//use App\Services\BanService;
 
 class UserService {
     
     use ResponseTrait;
+    protected TokenService $tokenService;
+    protected BanService $banService;
 
-    public function __construct() {
+    public function __construct( TokenService $tokenService, BanService $banService ) {
+
+        $this->tokenService = $tokenService;
+        $this->banService = $banService;
     }
 
     public function userRegister( $data ) {
@@ -32,9 +39,10 @@ class UserService {
 
     public function userLogin( User $user ) {
 
-        $token = $user->createToken( $user->name . "Token" )->plainTextToken;
+        $this->banService->resetLoginCounter( $user );
+        //$token = $this->tokenService->generateToken( $user );
         $response = [
-            "token" => $token,
+            //"token" => $token,
             "user" => $user->name
         ];
 
@@ -47,16 +55,21 @@ class UserService {
 
         if( !is_null( $user )) {
 
-            $user->increment( "logincounter" );
-            $user->update();
+            $counter = $this->banService->getLoginCounter( $user );
             
-            return $this->sendResponse( $user );
+            if( $counter < 3 ) {
+
+                $this->banService->setLoginCounter( $user );
+            }
+            
+            
+            return $this->sendResponse( $counter );
         }
     }
 
     public function userLogout( User $user ) {
 
-        $success = $user->currentAccessToken()->delete();
+        $success = $this->tokenService->destroyToken( $user );
 
         if( !$success ) {
 
