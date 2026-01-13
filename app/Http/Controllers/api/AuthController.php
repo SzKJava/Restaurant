@@ -7,22 +7,22 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Requests\AuthRequest;
-use App\Services\UserService;
+use App\Services\RegisterService;
 
 class AuthController extends Controller {
     
-    protected UserService $userService;
+    protected RegisterService $registerService;
 
-    public function __construct( UserService $userService ) {
+    public function __construct( RegisterService $registerService ) {
 
-        $this->userService = $userService;
+        $this->registerService = $registerService;
     }
 
     public function register( AuthRequest $request ) {
 
         $validated = $request->validated();
         
-        return $this->userService->userRegister( $validated );
+        return $this->registerService->userRegister( $validated );
     }
 
     public function login( Request $request ) {

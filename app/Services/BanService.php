@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Carbon\Carbon;
 
 class BanService {
     /**
@@ -29,5 +30,22 @@ class BanService {
         $user->update();
     }
 
+    public function getBanningTime( User $user ) {
 
+        return $user->banningtime;
+    }
+
+    public function setBanningTime( User $user ) {
+
+        $user->banningtime = Carbon::now()->addHour()->addMinute();
+        
+        $user->update();
+    }
+
+    public function resetBanningTime( User $user ) {
+
+        $user->banningtime = null;
+
+        $user->update();
+    }
 }

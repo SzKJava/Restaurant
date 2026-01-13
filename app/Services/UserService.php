@@ -22,32 +22,9 @@ class UserService {
         $this->banService = $banService;
     }
 
-    public function userRegister( $data ) {
+    
 
-        $user = new User();
-        $user->name = $data[ "name" ];
-        $user->email = $data[ "email" ];
-        $user->password = bcrypt( $data[ "password" ]);
-        //$user->password = Hash::make( $data[ "password" ]);
-        $user->role = "user";
-        $user->banningtime = null;
-
-        $user->save();
-
-        return $this->sendResponse( $user->name, "Sikeres regisztráció" );
-    }
-
-    public function userLogin( User $user ) {
-
-        $this->banService->resetLoginCounter( $user );
-        //$token = $this->tokenService->generateToken( $user );
-        $response = [
-            //"token" => $token,
-            "user" => $user->name
-        ];
-
-        return $this->sendResponse( $response, "Sikeres bejelentkezés." );
-    }
+    
 
     public function failedLogin( $name ) {
 
@@ -60,6 +37,10 @@ class UserService {
             if( $counter < 3 ) {
 
                 $this->banService->setLoginCounter( $user );
+
+            }else {
+
+                return $this->banService->setBanningTime( $user );
             }
             
             
@@ -67,15 +48,5 @@ class UserService {
         }
     }
 
-    public function userLogout( User $user ) {
-
-        $success = $this->tokenService->destroyToken( $user );
-
-        if( !$success ) {
-
-            return $this->sendError( "Végrehajtási hiba", [ "Hiba a kijelentkezés során" ], 422 );
-        }
-
-        return $this->sendResponse( $user->name, "Sikeres kijelentkezés" );
-    }
+    
 }
