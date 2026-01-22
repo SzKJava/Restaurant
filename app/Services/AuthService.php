@@ -2,27 +2,52 @@
 
 namespace App\Services;
 
+use App\Models\User;
+use App\Traits\ResponseTrait;
+use Carbon\Carbon;
+
 class AuthService{
 
-    public function __construct() {
+    protected BanService $banService;
+    protected TokenService $tokenService;
+
+    use ResponseTrait;
+
+    public function __construct( BanService $banService, TokenService $tokenService ) {
+
+        $this->banService = $banService;
+        $this->tokenService = $tokenService;
     }
 
     public function userLogin( User $user ) {
 
-        $this->banService->resetLoginCounter( $user );
-        $this->banService->resetBanningTime( $user );
-        $token = $this->tokenService->generateToken( $user );
-        $response = [
-            "token" => $token,
-            "user" => $user->name
-        ];
+        $banningTime = $user->banningtime;
+        if( Carbon::now()->addHour() < $banningTime ) {
 
-        return $this->sendResponse( $response, "Sikeres bejelentkezés." );
+            $messages = [
+                "Felhasználói fiók zárolva",
+                "Következő bejelentkezési lehetőség: ",
+                $banningTime
+            ];
+            return $this->sendError( "Bejelentkezési hiba", $messages, 403 );
+
+        }else {
+
+            $this->banService->resetLoginCounter( $user );
+            $this->banService->resetBanningTime( $user );
+            //$token = $this->tokenService->generateToken( $user );
+            $response = [
+            //"token" => $token,
+            "user" => $user->name
+            ];
+
+            return $this->sendResponse( $response, "Sikeres bejelentkezés." );
+        }
+        
     }
 
     public function userLogout( User $user ) {
 
-        // $user = auth( "sanctum" )->user();
         $success = $this->tokenService->destroyToken( $user );
 
         if( !$success ) {

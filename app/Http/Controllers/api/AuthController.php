@@ -8,14 +8,20 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Requests\AuthRequest;
 use App\Services\RegisterService;
+use App\Services\AuthService;
+use App\Services\FailedLoginService;
 
 class AuthController extends Controller {
     
     protected RegisterService $registerService;
+    protected AuthService $authService;
+    protected FailedLoginService $failedLoginService;
 
-    public function __construct( RegisterService $registerService ) {
+    public function __construct( RegisterService $registerService, AuthService $authService, FailedLoginService $failedLoginService ) {
 
         $this->registerService = $registerService;
+        $this->authService = $authService;
+        $this->failedLoginService = $failedLoginService;
     }
 
     public function register( AuthRequest $request ) {
@@ -30,11 +36,11 @@ class AuthController extends Controller {
         if( Auth::attempt([ "name" => $request[ "name"], "password" => $request[ "password" ]])) {
 
             $user = Auth::user();
-            return $this->userService->userLogin( $user );
+            return $this->authService->userLogin( $user );
 
         }else {
 
-            return $this->userService->failedLogin( $request[ "name" ]);
+            return $this->failedLoginService->failedLogin( $request[ "name" ]);
         }
     }
 
@@ -42,6 +48,6 @@ class AuthController extends Controller {
 
         $user = auth( "sanctum" )->user();
         
-        return $this->userService->userLogout( $user );
+        return $this->authService->userLogout( $user );
     }
 }

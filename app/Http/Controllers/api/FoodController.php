@@ -7,98 +7,48 @@ use Illuminate\Http\Request;
 use App\Models\MenuItem;
 use App\Http\Resources\FoodResource;
 use App\Http\Requests\FoodRequest;
+use App\Traits\ResponseTrait;
+use App\Services\FoodService;
 
-class FoodController extends ResponseController {
+class FoodController extends Controller {
+
+    use ResponseTrait;
+    protected FoodService $foodService;
+
+    public function __construct( FoodService $foodService ) {
+
+        $this->foodService = $foodService;
+    }
 
     public function getFoods() {
 
-        //$foods = MenuItem::all();
-
         $foods = MenuItem::with( "category" )->get();
 
-        return $this->sendResponse( FoodResource::collection( $foods ), "" );
+        return $this->sendResponse( FoodResource::collection( $foods ) );
     }
 
-    public function getFood( Request $request ) {
+    public function getFood( MenuItem $menuItem ) {
 
-        $food = MenuItem::where( "name", $request[ "food" ] )->first();
-
-        return $this->sendResponse( new FoodResource( $food ), "" );
+        return $this->sendResponse( new FoodResource( $menuItem ));
     }
 
-    public function addFood( FoodRequest $request ) {
+    public function createFood( FoodRequest $request ) {
 
-        //$request->validated();
-        // $request->validate([
+        $validated = $request->validated();
 
-        //     "name" => [ "required", "string", "max:20", "unique:menuitems" ],
-        // ]); 
-
-        // $food = MenuItem::create([
-        //     "name" => $request[ "name" ],
-        //     "category_id" => $request[ "category_id" ],
-        //     "price" => $request[ "price" ]
-        // ]);
-
-        $food = new MenuItem();
-
-        $food->name = $request[ "name" ];
-        $food->category_id = ( new CategoryController )->getId( $request[ "category" ]);
-        $food->price = $request[ "price" ];
-
-        //$food->save();
-
-        return response()->json([ "success" => $food ]);
+        return $this->foodService->create( $validated );
     }
 
-    public function updateFood( Request $request, $id ) {
+    public function updateFood( FoodRequest $request, MenuItem $menuItem ) {
 
-        $food = MenuItem::find( $id );
+        $validated = $request->validated();
 
-        if( is_null( $food ) ) {
-
-            return response()->json([ "success" => "Nincs ilyen étel" ]);
-
-        } else {
-
-            $food->name = $request[ "name" ];
-            $food->category_id = ( new CategoryController )->getId( $request[ "category" ]);
-            $food->price = $request[ "price" ];
-
-            $food->update();
-
-            return response()->json([ "success" => $food ]);
-        }
+        return $this->foodService->update( $validated, $menuItem );
+        
     }
 
-    public function destroyFood( $id ) {
+    public function destroyFood( MenuItem $menuItem ) {
 
-        $food = MenuItem::find( $id );
-        if( is_null( $food )) {
-
-            return $this->sendError( "Adathiba", ["Nincs ilyen étel"], 406 );
-
-        }else {
-
-            $food->delete();
-
-            return $this->sendResponse( $food, "Sikeres törlés" );
-        }
-    }
-
-        public function getId( $name ) {
-// hibaüzenet!!!
-        $food = MenuItem::where( "name", $name )->first();
-
-        $id = $food->id;
-
-        return $id;
-    }
-
-    public function getPrice( $id ) {
-
-        $food = MenuItem::find( $id );
-
-        return $food->price;
+        return $this->foodService->delete( $menuItem );
     }
 }

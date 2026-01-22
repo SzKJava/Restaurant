@@ -24,7 +24,7 @@ class FoodRequest extends BaseRequest {
 
         $specificRules = [
             
-            "name" => "unique:menuitems",
+            "name" => [ "required" ],
             "category" => [ "required", "string", "max:20" ],
             "price" => [ "required", "numeric" ]
         ];

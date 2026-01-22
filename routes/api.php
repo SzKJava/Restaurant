@@ -16,16 +16,17 @@ Route::get('/user', function (Request $request) {
 // Food
 Route::get( "/foods", [ FoodController::class, "getFoods" ]);
 Route::get( "/catfoods", [ MenuItemController::class, "getFoodsWithCategory" ]);
-Route::get( "/food", [ FoodController::class, "getFood" ]);
-Route::post( "/newfood", [ FoodController::class, "addFood" ]);
-Route::put( "/updatefood/{id}", [ FoodController::class, "updateFood" ]);
-Route::get( "/destroyfood/{id}", [ FoodController::class, "destroyfood" ]);
+Route::get( "/food/{menuItem}", [ FoodController::class, "getFood" ]);
+Route::post( "/newfood", [ FoodController::class, "createFood" ]);
+Route::put( "/updatefood/{menuItem}", [ FoodController::class, "updateFood" ]);
+Route::get( "/destroyfood/{menuItem}", [ FoodController::class, "destroyfood" ]);
 Route::get( "/testfood", [ MenuItemController::class, "food" ]);
 
 // Category
 Route::get( "/categories", [ CategoryController::class, "getCategories" ]);
-Route::post( "/addcategory", [ CategoryController::class, "addCategory" ]);
-
+Route::post( "/addcategory", [ CategoryController::class, "createCategory" ]);
+Route::put( "/updatecategory/{category}", [ CategoryController::class, "updateCategory" ]);
+Route::delete( "/deletecategory/{category}", [ CategoryController::class, "destroyCategory" ]);
 // Sale
 Route::get( "/sales", [ SaleController::class, "getSales" ]);
 Route::post( "/addsale", [ SaleController::class, "addSale" ]);

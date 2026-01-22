@@ -6,54 +6,42 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Http\Requests\CategoryRequest;
+use App\Traits\ResponseTrait;
+use App\Services\CategoryService;
 
-class CategoryController extends ResponseController {
+class CategoryController extends Controller {
     
+    use ResponseTrait;
+    protected CategoryService $categoryService;
+
+    public function __construct( CategoryService $categoryService ) {
+
+        $this->categoryService = $categoryService;
+    }
+
     public function getCategories() {
 
         $categories = Category::all();
 
-        return $this->sendResponse( $categories, "" );
+        return $this->sendResponse( $categories );
     }
 
-    public function addCategory( CategoryRequest $request ) {
+    public function createCategory( CategoryRequest $request ) {
 
-        //$request->validated();
-        $category = new Category();
-        $category->name = $request[ "name" ];
-
-        //$category->save();
-
-        return $this->sendResponse( $category, "Sikeres kiírás" );
+        $validated = $request->validated();
+        
+        return $this->categoryService->create( $validated );
     }
 
-    public function updateCategory( Request $request, $id ) {
+    public function updateCategory( CategoryRequest $request, Category $category ) {
 
-        $category = Category->find( $id );
-        $category->name = $request[ "name" ];
+        $validated = $request->validated();
 
-        return $this->sendResponse( $category, "Sikeres módosítás" );
+        return $this->categoryService->update( $validated, $category );
     }
 
-    public function destroyCategory( $id ) {
+    public function destroyCategory( Category $category ) {
 
-        $category = Category->find( $id );
-        $category->delete();
-
-        return $this->sendResponse( $category, "Sikeres törlés" );
-    }
-
-    public function getId( $name ) {
-
-        $category = Category::where( "name", $name )->first();
-        if( is_null( $category )) {
-
-            return false;
-
-        }else {
-
-            $id = $category->id;
-            return $id;
-        }
+        return $this->categoryService->delete( $category );
     }
 }
