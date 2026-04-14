@@ -35,9 +35,9 @@ class AuthService{
 
             $this->banService->resetLoginCounter( $user );
             $this->banService->resetBanningTime( $user );
-            //$token = $this->tokenService->generateToken( $user );
+            $token = $this->tokenService->generateToken( $user );
             $response = [
-            //"token" => $token,
+            "token" => $token,
             "user" => $user->name
             ];
 
