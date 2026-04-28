@@ -13,6 +13,13 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+
+Route::middleware([ "auth:sanctum" ])->group( function(){
+
+    Route::get( "/categories", [ CategoryController::class, "getCategories" ]);    
+    Route::post( "/addcategory", [ CategoryController::class, "createCategory" ]);
+    Route::delete( "/deletecategory/{category}", [ CategoryController::class, "destroyCategory" ]);
+});
 // Food
 Route::get( "/foods", [ FoodController::class, "getFoods" ]);
 Route::get( "/catfoods", [ MenuItemController::class, "getFoodsWithCategory" ]);
@@ -23,10 +30,10 @@ Route::get( "/destroyfood/{menuItem}", [ FoodController::class, "destroyfood" ])
 Route::get( "/testfood", [ MenuItemController::class, "food" ]);
 
 // Category
-Route::get( "/categories", [ CategoryController::class, "getCategories" ]);
-Route::post( "/addcategory", [ CategoryController::class, "createCategory" ]);
+// Route::get( "/categories", [ CategoryController::class, "getCategories" ]);
+// Route::post( "/addcategory", [ CategoryController::class, "createCategory" ]);
 Route::put( "/updatecategory/{category}", [ CategoryController::class, "updateCategory" ]);
-Route::delete( "/deletecategory/{category}", [ CategoryController::class, "destroyCategory" ]);
+// Route::delete( "/deletecategory/{category}", [ CategoryController::class, "destroyCategory" ]);
 // Sale
 Route::get( "/sales", [ SaleController::class, "getSales" ]);
 Route::post( "/addsale", [ SaleController::class, "addSale" ]);

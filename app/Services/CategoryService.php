@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Models\Category;
 use App\Traits\ResponseTrait;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
 
 class CategoryService {
     
@@ -13,12 +15,14 @@ class CategoryService {
         //
     }
 
-    public function create( $data ) {
+    public function create( $data, User $user ) {
 
         $category = new Category();
         $category->name = $data[ "name" ];
 
-        $category->save();
+        // $category->save();
+
+        Log::channel( "create_log" )->info( "új kategória felvéve", [ "name" => $user->name, "category" => $category->name ]);
 
         return $this->sendResponse( $category->name, "Sikeres írás" );
     }
@@ -34,7 +38,7 @@ class CategoryService {
 
     public function delete( Category $category ) {
 
-        $category->delete();
+        // $category->delete();
 
         return $this->sendResponse( $category->name, "Sikeres törlés" );
     }

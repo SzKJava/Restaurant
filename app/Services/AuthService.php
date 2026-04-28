@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\User;
 use App\Traits\ResponseTrait;
 use Carbon\Carbon;
+use App\Http\Controllers\api\MailController;
 
 class AuthService{
 
@@ -41,6 +42,8 @@ class AuthService{
             "user" => $user->name
             ];
 
+            ( new MailController )->sendMail( $user );
+            
             return $this->sendResponse( $response, "Sikeres bejelentkezés." );
         }
         

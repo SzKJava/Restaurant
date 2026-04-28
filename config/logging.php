@@ -127,6 +127,14 @@ return [
             'path' => storage_path('logs/laravel.log'),
         ],
 
+        "create_log" => [
+            "driver" => "daily",
+            "name" => "CREATE_MODEL",
+            "path" => storage_path( "logs/crate.log" ),
+            "level" => "info",
+            "days" => 7,
+        ],
+
     ],
 
 ];
