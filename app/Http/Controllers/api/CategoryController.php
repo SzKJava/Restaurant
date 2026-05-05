@@ -32,11 +32,12 @@ class CategoryController extends Controller {
 
     public function createCategory( CategoryRequest $request, User $user ) {
 
-        Gate::authorize( "create", Category::class );
+        //Gate::authorize( "create", Category::class );
 
         $validated = $request->validated();
         
-        return $this->categoryService->create( $validated, auth()->user() );
+        //return $this->categoryService->create( $validated, auth()->user() );
+        return $this->categoryService->create( $validated );
     }
 
     public function updateCategory( CategoryRequest $request, Category $category ) {

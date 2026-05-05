@@ -15,14 +15,14 @@ class CategoryService {
         //
     }
 
-    public function create( $data, User $user ) {
+    public function create( $data ) {
 
         $category = new Category();
-        $category->name = $data[ "name" ];
+        $category->namea = $data[ "name" ];
 
-        // $category->save();
+        $category->save();
 
-        Log::channel( "create_log" )->info( "új kategória felvéve", [ "name" => $user->name, "category" => $category->name ]);
+        //Log::channel( "create_log" )->info( "új kategória felvéve", [ "name" => $user->name, "category" => $category->name ]);
 
         return $this->sendResponse( $category->name, "Sikeres írás" );
     }
