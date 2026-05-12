@@ -3,26 +3,30 @@
 namespace App\Exceptions;
 
 use Illuminate\Http\Request;
+use App\Traits\ResponseTrait;
+use Illuminate\Database\QueryException;
 
 use Exception;
 
 class MyQueryExcepton extends Exception {
     
-    public function __construct() {}
-    
-    public function render( QueryException $ex, Request $request ) {
+    use ResponseTrait;
 
-        $this->request = $request;
+    public function __construct( protected QueryException $ex, protected Request $request ) {
+
         $message = $this->buildMessage( $request );
         parent::__construct( $message, 500, $ex );
+    }
+    
+    public function render( Request $request ) {
+
+        return $this->sendError( "Végrehajtási hiba", [ $this->getMessage()], 500 );
     }
 
     private function buildMessage( Request $request ) {
 
-        $route = $request->route();
-        $modelName = collect( $route->parameterNames() )->first();
-        //$value = collect( $route->parameters() )->skip( 1 )->first();
-        $this->debugMessage = "Érvénytelen mező '{$modelName}'";
+        $route = $request->segment( 2 );
+        $this->debugMessage = "Érvénytelen mező a(z) '{$route}' útvonalon.";
         $safeMessage = "Adatbázis hiba, ellenőrizze az adatokat!";
 
         return config( "app.debug" ) ? $this->debugMessage : $safeMessage;

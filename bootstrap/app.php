@@ -4,9 +4,12 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Database\QueryException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Exceptions\MyQueryExcepton;
+use App\Exceptions\InvalidModelException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,26 +24,20 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         
-        $exceptions->reportable( function( QueryException $ex ){
-
-            Log::channel( "create_log" )->error( "Sikertelen adatfelvétel. ". $ex->getMessage() );
-        });
-
         $exceptions->renderable( function( QueryException $exc, Request $request ) {
 
-            throw new MyQueryExcepton( $exc, $request );
+            if( $request->is( "api/*" )) {
 
-            // $safeMessage = "Próbálja késöbb";
-            // $debugMessage = $exc->getMessage();
+                throw new MyQueryExcepton( $exc, $request );
+            }
+        });
 
-            // if( $request->is( "api/*" )) {
+        $exceptions->renderable( function( NotFoundHttpException $ex, Request $request ) {
 
-            //     return response()->json([
-            //         "success" => false,
-            //         "message" => "Adatbázis hiba",
-            //         "details" => config( "app.debug" ) ? $debugMessage : $safeMessage,
-            //     ]);
-            // }
+            if( $request->is( "api/*" )) {
+
+                throw new InvalidModelException( $ex, $request );
+            }
         });
 
     })->create();

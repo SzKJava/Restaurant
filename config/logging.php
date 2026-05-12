@@ -135,6 +135,13 @@ return [
             "days" => 7,
         ],
 
+        "invalid_model" => [
+            "driver" => "daily",
+            "name" => "INVALID_MODEL",
+            "path" => storage_path( "logs/models.log" ),
+            "level" => "warning",
+            "days" => 7,
+        ],
     ],
 
 ];
