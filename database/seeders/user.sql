@@ -1,11 +1,11 @@
 INSERT INTO users (name, email, password) VALUES
-('KovacsAnna', 'anna@vmi.lan', '123456'),
-('NagyBela', 'bela@vmi.lan', '123456'),
-('TothCsaba', 'csaba@vmi.lan', '123456'),
-('FarkasDora', 'dora@vmi.lan', '123456'),
-('VargaEndre', 'endre@vmi.lan', '123456'),
-('SzaboGabi', 'gabi@vmi.lan', '123456'),
-('KissLivia', 'livia@vmi.lan', '123456'),
-('MolnarPeter', 'peter@vmi.lan', '123456'),
-('HorvathRita', 'rita@vmi.lan', '123456'),
-('BaloghZsolt', 'zsolt@vmi.lan', '123456');
+('anna', 'anna@vmi.lan', '123456'),
+('bela', 'bela@vmi.lan', '123456'),
+('csaba', 'csaba@vmi.lan', '123456'),
+('dora', 'dora@vmi.lan', '123456'),
+('endre', 'endre@vmi.lan', '123456'),
+('gabi', 'gabi@vmi.lan', '123456'),
+('livia', 'livia@vmi.lan', '123456'),
+('peter', 'peter@vmi.lan', '123456'),
+('rita', 'rita@vmi.lan', '123456'),
+('zsolt', 'zsolt@vmi.lan', '123456');

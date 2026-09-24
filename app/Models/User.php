@@ -51,4 +51,9 @@ class User extends Authenticatable
 
         return in_array( $this->role, [ "admin", "super" ]); 
     }
+
+    public function profile() {
+
+        return $this->hasOne( Profile::class );
+    }
 }

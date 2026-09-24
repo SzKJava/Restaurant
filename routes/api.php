@@ -20,6 +20,9 @@ Route::middleware([ "auth:sanctum" ])->group( function(){
     Route::post( "/addcategory", [ CategoryController::class, "createCategory" ]);
     Route::delete( "/deletecategory/{category}", [ CategoryController::class, "destroyCategory" ]);
 });
+
+Route::get( "/users", [ ProfileController::class, "getUsers" ]);
+
 // Food
 Route::get( "/foods", [ FoodController::class, "getFoods" ]);
 Route::get( "/catfoods", [ MenuItemController::class, "getFoodsWithCategory" ]);

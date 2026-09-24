@@ -20,9 +20,10 @@ class DatabaseSeeder extends Seeder
 
             CategorySeeder::class,
             MenuitemSeeder::class,
-            //UserSeeder::class,
+            AdminSeeder::class,
+            UserSeeder::class,
+            ProfileSeeder::class,
             SaleSeeder::class,
-            AdminSeeder::class
         ]);
 
     }
